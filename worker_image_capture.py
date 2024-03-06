@@ -7,6 +7,7 @@ from torchvision import transforms
 from torchvision.transforms.functional import InterpolationMode
 from tqdm import tqdm
 import requests
+import os
 
 
 def init_model(device):
@@ -79,8 +80,8 @@ def chunks(lst, n):
 def caption_image(gpu_id, images):
 
     # Error if no gpu remove if you want to use CPU
-    if not torch.cuda.is_available():
-        raise Exception("No GPU Found!")
+    #if not torch.cuda.is_available():
+    #    raise Exception("No GPU Found!")
     
     device = torch.device(f"cuda:{gpu_id}" if torch.cuda.is_available() else "cpu")
 
@@ -110,7 +111,21 @@ def caption_image(gpu_id, images):
     
 
 if __name__ == "__main__":
-    captions = caption_image(0, Image.open('./images/1.png'))
+    directory = './images'
+
+    # List all files in the directory
+    files = os.listdir(directory)
+
+    # Filter out only the image files (assuming they have extensions like .png, .jpg, .jpeg, etc.)
+    image_files = [file for file in files if file.lower().endswith(('.png', '.jpg', '.jpeg', '.gif'))]
+    array = []
+    # Loop through each image file and pass it to caption_image function
+    for image_file in image_files:
+        image_path = os.path.join(directory, image_file)
+        image = Image.open(image_path)
+        array.append(image)
+        
+        captions = caption_image(0, array)
 
     print(captions)
     
