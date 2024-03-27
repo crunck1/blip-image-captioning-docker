@@ -102,7 +102,7 @@ def caption_image(gpu_id, images):
         transformed_images = prepare_images(converted_imgs, device)
 
         for image in transformed_images:
-            caption = model.generate(image, sample=False, num_beams=3, max_length=20, min_length=5)
+            caption = model.generate(image, sample=False, num_beams=3, max_length=5, min_length=2)
             captions.append(caption[0])
   
     print(captions)
